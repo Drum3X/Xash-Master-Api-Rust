@@ -1,0 +1,9 @@
+[package]
+name = "xash_master_api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.29.1", features = ["full"] }
+futures = "0.3"
+format-bytes = "0.1"
