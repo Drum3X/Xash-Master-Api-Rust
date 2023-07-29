@@ -37,7 +37,12 @@ pub async fn get_iplist(
         gamedir.as_bytes()
     );
     let result: Vec<u8> = send_packet(&packet, addr, timeout).await?;
-    Ok(parser::parse_master_info(result))
+    Ok(
+        match parser::parse_master_info(result) {
+            Ok(result) => result,
+            Err(..) => return Err("Parsing error.".into())
+        }
+    )
 }
 
 pub async fn get_server_info(
@@ -48,8 +53,8 @@ pub async fn get_server_info(
     let result: Vec<u8> = send_packet(packet, addr, timeout).await?;
     Ok(
         match parser::parse_server_info(result) {
-            Some(result) => result,
-            None => return Err("Parsing error".into())
+            Ok(result) => result,
+            Err(..) => return Err("Parsing error.".into())
         }
     )
 }

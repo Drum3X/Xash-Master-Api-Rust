@@ -1,6 +1,7 @@
 mod unpack;
 
 use std::net::SocketAddr;
+use std::error::Error;
 
 #[derive(Debug, Default)]
 pub struct Server {
@@ -34,7 +35,7 @@ pub struct Server {
     pub bots: u8
 }
 
-pub fn parse_master_info(data: Vec<u8>) -> Vec<SocketAddr> {
+pub fn parse_master_info(data: Vec<u8>) -> Result<Vec<SocketAddr>, Box<dyn Error>> {
     let mut data: Vec<u8> = data[6..].to_vec();
 	let mut servers: Vec<SocketAddr> = Vec::new();
 	
@@ -51,16 +52,16 @@ pub fn parse_master_info(data: Vec<u8>) -> Vec<SocketAddr> {
         )
 	}
 	
-	servers
+	Ok(servers)
 }
 
-pub fn parse_server_info(data: Vec<u8>) -> Option<Server> {
+pub fn parse_server_info(data: Vec<u8>) -> Result<Server, Box<dyn Error>> {
     let mut data: Vec<u8> = data;
     let mut server: Server = Server::default(); 
     
     //conless marker
     if unpack::unpack_i32(&mut data) != -1 {
-        return None
+        return Err("Invalid response.".into());
     }
     
     server.engine_type = unpack::unpack_u8(&mut data) as char;
@@ -115,8 +116,8 @@ pub fn parse_server_info(data: Vec<u8>) -> Option<Server> {
         server.secure = unpack::unpack_u8(&mut data);
         server.bots = unpack::unpack_u8(&mut data);
     } else {
-        return None;
+        return Err("Invalid engine type.".into());
     }
     
-    Some(server)
+    Ok(server)
 }
