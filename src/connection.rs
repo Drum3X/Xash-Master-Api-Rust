@@ -16,7 +16,7 @@ pub async fn send_packet(
     socket.connect(addr).await?;
     socket.send(packet).await?;
 
-    let mut buffer: Vec<u8> = vec![0; 1024];
+    let mut buffer: Vec<u8> = vec![0; 512];
     time::timeout(timeout, socket.recv(&mut buffer)).await??;
 
     Ok(buffer)
@@ -54,7 +54,7 @@ pub async fn get_server_info(
     Ok(
         match parser::parse_server_info(result) {
             Ok(result) => result,
-            Err(..) => return Err("Parsing error.".into())
+            Err(..) => return Err("Parsing error".into())
         }
     )
 }

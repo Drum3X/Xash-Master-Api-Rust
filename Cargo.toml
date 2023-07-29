@@ -5,5 +5,8 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1.29.1", features = ["full"] }
+actix-web = "4"
 futures = "0.3"
-format-bytes = "0.1"
+serde = "1.0"
+serde_json = "1.0"
+format-bytes = "0.2.2"
