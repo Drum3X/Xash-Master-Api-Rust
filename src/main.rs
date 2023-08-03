@@ -2,7 +2,7 @@
 mod parser;
 mod connection;
 
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, web, get};
 use tokio::time::Duration; 
 use std::net::SocketAddr;
 use futures::future::join_all;
