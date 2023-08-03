@@ -43,9 +43,9 @@ pub struct Server {
 pub fn parse_master_info(data: Vec<u8>) -> Result<Vec<SocketAddr>, Box<dyn Error>> {
     let mut data: Vec<u8> = data[6..].to_vec();
     
-	let mut servers: Vec<SocketAddr> = Vec::new();
-	while !data.is_empty() && !(data[0] == 0) {
-		servers.push(
+    let mut servers: Vec<SocketAddr> = Vec::new();
+    while !data.is_empty() && !(data[0] == 0) {
+        servers.push(
             format!(
                 "{}.{}.{}.{}:{}", 
                 unpack::unpack_u8(&mut data), 
@@ -55,9 +55,9 @@ pub fn parse_master_info(data: Vec<u8>) -> Result<Vec<SocketAddr>, Box<dyn Error
                 unpack::unpack_u16_be(&mut data)
             ).parse::<SocketAddr>().expect("Invalid Address")
         )
-	}
-	
-	Ok(servers)
+    }
+    
+    Ok(servers)
 }
 
 pub fn parse_server_info(data: Vec<u8>) -> Result<Server, Box<dyn Error>> {
