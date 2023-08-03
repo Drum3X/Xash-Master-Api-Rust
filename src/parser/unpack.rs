@@ -15,6 +15,7 @@ pub fn unpack_i16(data: &mut Vec<u8>) -> i16 {
     value 
 }
 
+//for port parsing 
 pub fn unpack_u16_be(data: &mut Vec<u8>) -> u16 {
     let (value_bytes, rest) = data.split_at(2);
     let value = u16::from_be_bytes([value_bytes[0], value_bytes[1]]);
@@ -39,7 +40,7 @@ pub fn unpack_i32(data: &mut Vec<u8>) -> i32 {
 pub fn unpack_string(data: &mut Vec<u8>) -> String {
     let index = match data.iter().position(|&x| x == 0) {
         Some(index) => index,
-        None => todo!()
+        None => 0
     };
     
     let rest = data.split_off(index + 1);

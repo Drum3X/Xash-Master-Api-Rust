@@ -1,3 +1,4 @@
+
 mod unpack;
 
 use std::net::SocketAddr;
@@ -41,8 +42,8 @@ pub struct Server {
 
 pub fn parse_master_info(data: Vec<u8>) -> Result<Vec<SocketAddr>, Box<dyn Error>> {
     let mut data: Vec<u8> = data[6..].to_vec();
+    
 	let mut servers: Vec<SocketAddr> = Vec::new();
-	
 	while !data.is_empty() && !(data[0] == 0) {
 		servers.push(
             format!(
@@ -63,7 +64,7 @@ pub fn parse_server_info(data: Vec<u8>) -> Result<Server, Box<dyn Error>> {
     let mut data: Vec<u8> = data;
     let mut server: Server = Server::default(); 
     
-    //conless marker
+    //if the master response fails
     if unpack::unpack_i32(&mut data) != -1 {
         return Err("Invalid response.".into());
     }
@@ -71,6 +72,7 @@ pub fn parse_server_info(data: Vec<u8>) -> Result<Server, Box<dyn Error>> {
     server.engine_type = unpack::unpack_u8(&mut data) as char;
     
     if server.engine_type == 'I' {
+        //old engine 
         server.protocol_ver = unpack::unpack_u8(&mut data);
         server.hostname = unpack::unpack_string(&mut data);
         server.map = unpack::unpack_string(&mut data); 
@@ -90,6 +92,7 @@ pub fn parse_server_info(data: Vec<u8>) -> Result<Server, Box<dyn Error>> {
         server.passworded = unpack::unpack_u8(&mut data);
         server.secure = unpack::unpack_u8(&mut data);
     } else if server.engine_type == 'm' {
+        //new engine 
         server.address = unpack::unpack_string(&mut data);
         server.hostname = unpack::unpack_string(&mut data);
         server.map = unpack::unpack_string(&mut data);
