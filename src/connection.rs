@@ -53,7 +53,11 @@ pub async fn get_server_info(
     let result: Vec<u8> = send_packet(packet, addr, timeout).await?;
     Ok(
         match parser::parse_server_info(result) {
-            Ok(result) => result,
+            Ok(mut result) => {
+                result.ip = addr.ip().to_string();
+                result.port = addr.port();
+                result
+            },
             Err(..) => return Err("Parsing error".into())
         }
     )

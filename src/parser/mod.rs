@@ -2,9 +2,13 @@ mod unpack;
 
 use std::net::SocketAddr;
 use std::error::Error;
+use serde::{Serialize};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize)]
 pub struct Server {
+    pub ip: String,
+    pub port: u16,
+    
     //old engine info
     pub engine_type: char,
     pub protocol_ver: u8,
