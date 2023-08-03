@@ -2,9 +2,9 @@ mod unpack;
 
 use std::net::SocketAddr;
 use std::error::Error;
-use serde::{Serialize};
+use serde::Serialize;
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Default, Serialize)]
 pub struct Server {
     pub ip: String,
     pub port: u16,
