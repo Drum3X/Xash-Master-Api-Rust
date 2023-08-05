@@ -40,13 +40,12 @@ pub fn unpack_i32(data: &mut Vec<u8>) -> i32 {
 pub fn unpack_string(data: &mut Vec<u8>) -> String {
     let index = match data.iter().position(|&x| x == 0) {
         Some(index) => index,
-        None => 0
+        None => 0,
     };
     
-    let rest = data.split_off(index + 1);
-    let value = String::from_utf8_lossy(&data[..data.len() - 1]).to_string();
-
-    data.clear();
-    data.extend_from_slice(&rest);    
-    value
+    let ref_data = data.clone();
+    let (value, rest) = ref_data.split_at(index + 1);
+    
+    *data = rest.to_vec();
+    String::from_utf8(value[..value.len() - 1].to_vec()).unwrap()
 }
