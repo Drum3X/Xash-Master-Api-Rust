@@ -24,7 +24,7 @@ struct QueryOptions {
     server_timeout: Option<u64>
 }
 
-#[get("/")]
+#[get("/api")]
 async fn index(info: web::Query<QueryOptions>) -> impl Responder {
     let addr: SocketAddr = MASTER_ADDR.parse().unwrap();
     
@@ -116,7 +116,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .service(index)
     })
-    .bind(("127.0.0.1", 8000))?
+    .bind(("127.0.0.1", 3000))?
     .run()
     .await
 }
