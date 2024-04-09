@@ -49,11 +49,28 @@ async fn index(info: web::Query<QueryOptions>) -> impl Responder {
         None => 250
     };
     
-    let iplist: Vec<SocketAddr> = match connection::get_iplist(addr, &gamedir, nat, Duration::from_millis(master_timeout)).await {
-        Ok(result) => result,
-        Err(..) => return HttpResponse::Ok().body("[]")
-    };
-    
+    let mut iplist: Vec<SocketAddr> = Vec::new();
+    if &gamedir == "all" {
+        let mut valve: Vec<SocketAddr> = match connection::get_iplist(addr, "valve", nat, Duration::from_millis(master_timeout)).await {
+            Ok(result) => result,
+            Err(..) => return HttpResponse::Ok().body("[]")
+        };  
+        let mut cstrike: Vec<SocketAddr> = match connection::get_iplist(addr, "cstrike", nat, Duration::from_millis(master_timeout)).await {
+            Ok(result) => result,
+            Err(..) => return HttpResponse::Ok().body("[]")
+        };
+
+        iplist.append(&mut valve);
+        iplist.append(&mut cstrike);
+    } else {
+        let mut gamedir: Vec<SocketAddr> = match connection::get_iplist(addr, &gamedir, nat, Duration::from_millis(master_timeout)).await {
+            Ok(result) => result,
+            Err(..) => return HttpResponse::Ok().body("[]")
+        };
+
+        iplist.append(&mut gamedir);
+    }
+
     let mut processes = Vec::new();
     
     for addr in iplist {

@@ -47,5 +47,8 @@ pub fn unpack_string(data: &mut Vec<u8>) -> String {
     let (value, rest) = ref_data.split_at(index + 1);
     
     *data = rest.to_vec();
-    String::from_utf8(value[..value.len() - 1].to_vec()).unwrap()
+    match String::from_utf8(value[..value.len() - 1].to_vec()) {
+        Ok(result) => result,
+        Err(..) => String::from("An error occurred while decoding hostname!"),
+    }
 }
