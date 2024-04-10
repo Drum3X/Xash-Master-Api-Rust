@@ -2,7 +2,7 @@
 mod parser;
 mod connection;
 
-use actix_web::{App, HttpResponse, HttpServer, Responder, web, get};
+use actix_web::{App, HttpResponse, HttpRequest, HttpServer, Responder, web, get};
 use tokio::time::Duration; 
 use std::net::SocketAddr;
 use futures::future::join_all;
@@ -25,7 +25,11 @@ struct QueryOptions {
 }
 
 #[get("/api")]
-async fn index(info: web::Query<QueryOptions>) -> impl Responder {
+async fn index(req: HttpRequest, info: web::Query<QueryOptions>) -> impl Responder {
+    if let Some(req_addr) = req.peer_addr() {
+        println!("Request received from {:?}", req_addr.ip());
+    };
+    
     let addr: SocketAddr = MASTER_ADDR.parse().unwrap();
     
     //API queries
