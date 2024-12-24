@@ -137,7 +137,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .service(index)
     })
-    .bind(("127.0.0.1", 3000))?
+    .bind(("127.0.0.1", 2075))?
     .run()
     .await
 }
